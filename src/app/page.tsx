@@ -7,6 +7,9 @@ import Trending from "@/components/home/Trending";
 import { getPosts } from "@/libs/posts";
 import { Post } from "@prisma/client";
 
+
+export const revalidate = 60; 
+
 export default async function Home() {
   const posts = await getPosts();
 

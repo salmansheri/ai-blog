@@ -15,3 +15,18 @@ export async function getPosts() {
 
 
 }
+
+export async function getPost(id: any) {
+    try {
+        const post = await prisma.post.findUnique({
+            where: {
+                id
+            }
+        })
+
+        return post; 
+    } catch(error: any) {
+        throw new Error(error)
+    }
+
+}
