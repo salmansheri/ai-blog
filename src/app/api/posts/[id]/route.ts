@@ -1,34 +1,59 @@
-import { NextResponse } from "next/server"
-import { prisma } from "../../client"
-
+import { NextResponse } from "next/server";
+import { prisma } from "../../client";
 
 interface IParams {
-    id?: string
+  id?: string;
 }
 
-export async function GET(
-    request: Request, 
-    {params}: {params: IParams}
+export async function GET(request: Request, { params }: { params: IParams }) {
+  try {
+    const { id } = params;
+    const post = await prisma.post.findUnique({
+      where: {
+        id,
+      },
+    });
 
-) {
-    try{
-        const { id } = params; 
-        const post = await prisma.post.findUnique({
-            where: {
-                id,
-            }
-        })
+    return NextResponse.json(post, {
+      status: 200,
+    });
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: error.message },
+      {
+        status: 500,
+      }
+    );
+  }
+}
 
-        return NextResponse.json(post, {
-            status: 200
-        })
+export async function PATCH(request: Request, { params }: { params: IParams }) {
+  try {
+    const { id } = params;
+    const body = await request.json();
 
-    } catch(error: any) {
-        return NextResponse.json({message: error.message}, {
-            status: 500
-        })
+    const { title, content } = body;
 
-    }
-   
+    const post = await prisma.post.update({
+      where: {
+        id,
+      },
+      data: {
+        title,
+        content,
+      },
+    });
 
+    return NextResponse.json(post, {
+      status: 200,
+    });
+  } catch (error: any) {
+    console.error("request Error", error );
+    return NextResponse.json(
+      { message: error.message },
+      {
+        status: 500,
+      }
+    );
+  }
 }

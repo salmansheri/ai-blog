@@ -4,8 +4,11 @@ import { Post } from '@prisma/client'
 export async function getPosts() {
     try {
         const posts: Array<Post> = await prisma.post.findMany();
+
+
         
-        return posts; 
+        
+        return posts
 
     } catch(err: any) {
         throw new Error(err);
@@ -24,7 +27,13 @@ export async function getPost(id: any) {
             }
         })
 
-        return post; 
+        const formattedPost = {
+            ...post, 
+            createdAt: post?.createdAt?.toISOString(),
+         
+        }
+
+        return formattedPost; 
     } catch(error: any) {
         throw new Error(error)
     }
